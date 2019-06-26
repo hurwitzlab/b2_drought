@@ -1,4 +1,4 @@
-﻿Term,Types,Subtypes,required_fields
+Term,Types,Subtypes,required_fields
 sample_type,core,surface_core,sample_ID
 sample_type,core,Surface_core,sample_type
 sample_type,core,Surface_core,collection_protocol_ID

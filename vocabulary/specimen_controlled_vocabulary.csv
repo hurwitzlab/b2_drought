@@ -1,4 +1,4 @@
-﻿Term,Displayed_term,Definition,Section_object,Units,Type,Aliases
+Term,Displayed_term,Definition,Section_object,Units,Type,Aliases
 sample_ID,sample ID,Unique identifier for the sample.,Specimen_description,,string,
 sample_type,sample type,"type of sample. Follows one of the types of sample : Cores (Surface cores, Pit cores - full, Pit cores - small); litter samples; live leaf sample; soil surface sample; root sample. Alternatively, the type of sample can be set as ""subsample"" and need to designate a parent sample.",Specimen_description,,string,
 collection_protocol_ID,collection protocol ID,ID for the protocol used during the sampling event,Collection,,string,
