@@ -1,0 +1,8 @@
+Term,Types,Subtypes,required_fields
+Experiment_type,VOCs,,sample_ID
+Experiment_type,VOCs,,sample_type
+Experiment_type,VOCs,,run_name
+Experiment_type,VOCs,,experiment_type
+Experiment_type,VOCs,,experiment_date-time
+Experiment_type,VOCs,,operator
+Experiment_type,VOCs,,protocol_ID

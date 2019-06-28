@@ -25,8 +25,8 @@ date-time_of_collection,date-Time of collection (ISO date-time),Date and time of
 date_of_collection,date of collection,Date of sample collection.,Collection,Date,date,
 time_of_collection,time of collection (time UTC),Time of sample collection.,Collection,Time UTC,time,
 notes,notes,Notes and comments,Specimen_description,,string,comments
-date_of_subsampling,date of subsampling,Date of subsampling collection.,Collection,,date,
-date_of_processing_-_sample_grinding,date of processing - sample grinding,Date of sample processing. Sample grinding is applicable to leaf sample and imply the sample destruction.,Collection,,date,
+date_of_subsampling,date of subsampling,Date of subsampling collection.,Collection,Date,date,
+date_of_processing_-_sample_grinding,date of processing - sample grinding,Date of sample processing. Sample grinding is applicable to leaf sample and imply the sample destruction.,Collection,Date,date,
 operator,operator,Person who collected the sample,Collection,,string,
 parent_sample_name,parent sample name,Name of the parent sample,Specimen_description,,string,
-parent_sample_id,parent sample ID,ID of the parent sample,Specimen_description,,string,
+parent_sample_ID,parent sample ID,ID of the parent sample,Specimen_description,,string,
