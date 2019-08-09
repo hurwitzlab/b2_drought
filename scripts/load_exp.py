@@ -93,44 +93,20 @@ def main():
     columns = samples_df.columns
     logging.debug('Columns = %s', ', '.join(columns))
 
-    check_samples(columns, args.type, args.topology)
+    check_columns(columns, args.type, args.topology)
     logging.debug('Samples file OK')
 
-    col_meta = get_column_metadata(samples_df, args.vocabulary)
+    col_meta = get_column_metadata(columns, args.vocabulary)
     logging.debug('Got column meta')
 
-    samples = []
-    for index, row in samples_df.iterrows():
-        sample, result, files = {}, {}, {}
-        for fld in columns:
-            meta = col_meta.get(fld)
-            section = meta['section']
-            dtype = meta['type']
-            val = row[fld]
+    num_exported = export_samples(samples_df, col_meta, args.outfile, args.pretty)
+    logging.debug('Exported %s samples to "%s"', num_exported, args.outfile)
 
-            if dtype == 'date-time':
-                val = {'$date': val}
-
-            if meta:
-                if meta['section'] == 'result':
-                    result[fld] = val
-                elif meta['section'] == 'file':
-                    files[fld] = val
-                else:
-                    sample[fld] = val
-
-        sample['Result'] = result
-        sample['files'] = files
-        samples.append(sample)
-
-    logging.debug('Encoding %s samples to %s', len(samples), args.outfile)
-    out_fh = open(args.outfile, 'wt')
-    out_fh.write(json.dumps(samples, indent=4 if args.pretty else 0))
     print(f'Done, see output "{args.outfile}".')
 
 
 # --------------------------------------------------
-def check_samples(columns, exp_type, topo_file):
+def check_columns(columns, exp_type, topo_file):
     """
     Check samples with topology
 
@@ -151,14 +127,13 @@ def check_samples(columns, exp_type, topo_file):
 
     missing = list(filter(lambda fld: fld not in columns, req_flds))
     if missing:
-        logging.critical('samples missing = %s', ', '.join(missing))
-        return False
+        raise Exception('samples missing = %s', ', '.join(missing))
 
     return True
 
 
 # --------------------------------------------------
-def get_column_metadata(samples_df, vocab_file):
+def get_column_metadata(columns, vocab_file):
     """
     Get column metadata
 
@@ -175,7 +150,8 @@ def get_column_metadata(samples_df, vocab_file):
 
     vocab = pd.read_csv(vocab_file)
     col_meta = {}
-    for col in samples_df.columns:
+    missing = []
+    for col in columns:
         terms = vocab[vocab['Term'] == col]
         if len(terms) == 1:
             term = terms.iloc[0]
@@ -184,9 +160,47 @@ def get_column_metadata(samples_df, vocab_file):
                 'type': term['Type'].lower()
             }
         else:
-            logging.warning(f'Column "{col}" not in vocabulary file')
+            missing.append(col)
+
+    if missing:
+        msg = 'Columns "{}" not in vocabulary file'.format(', '.join(missing))
+        raise Exception(msg)
 
     return col_meta
+
+
+# --------------------------------------------------
+def export_samples(samples_df, col_meta, out_file, pretty):
+    """Export samples to out_file"""
+
+    samples = []
+    for index, row in samples_df.iterrows():
+        sample, result, files = {}, {}, {}
+        for fld in samples_df.columns:
+            meta = col_meta.get(fld)
+            section = meta['section']
+            dtype = meta['type']
+            val = row[fld]
+
+            if dtype == 'date-time':
+                val = {'$date': val}
+
+            if meta:
+                if meta['section'] == 'result':
+                    result[fld] = val
+                elif meta['section'] == 'file':
+                    files[fld] = val
+                else:
+                    sample[fld] = val
+
+        sample['Result'] = result
+        sample['files'] = files
+        samples.append(sample)
+
+    out_fh = open(out_file, 'wt')
+    out_fh.write(json.dumps(samples, indent=4 if pretty else 0))
+
+    return len(samples)
 
 
 # --------------------------------------------------
