@@ -3,3 +3,9 @@ exp:
 
 load:
 	mongoimport --jsonArray -d b2 -c load_test samples.json
+
+reqs:
+	python3 -m pip install -r requirements.txt
+
+orm:
+	sqlacodegen postgresql:///b2 > b2/model.py
